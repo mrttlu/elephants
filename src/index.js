@@ -5,17 +5,18 @@ const cors = require('cors');
 const fs = require('fs');
 
 const port = 4000;
-const elephantsUrl = 'https://elephant-api.herokuapp.com/elephants';
 
+app.use(express.json());
 app.use(cors());
 
-app.get('/elephants', async (req, res) => {
+app.post('/data', async (req, res) => {
+  const { url } = req.body;
+  console.log(url);
   try {
-    const elephantsResponse = await axios.get(elephantsUrl);
-    const data = JSON.stringify(elephantsResponse.data);
-    fs.writeFileSync('elephants.json', data);
+    const response = await axios.get(url);
+    const data = response.data;
     res.status(200).json({
-      elephants: elephantsResponse.data
+      data,
     });
   } catch (error) {
     console.log(error);
